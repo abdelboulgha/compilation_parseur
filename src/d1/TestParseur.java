@@ -193,7 +193,7 @@ public class TestParseur {
                     }
                 }
 
-                // Create styled content for the dialog
+                // Create styled content for the dialog///
                 JPanel dialogPanel = new JPanel(new BorderLayout(10, 10));
                 dialogPanel.setBackground(new Color(240, 248, 255));
                 dialogPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
