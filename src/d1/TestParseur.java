@@ -19,20 +19,17 @@ public class TestParseur {
         frame.setSize(700, 500);
         frame.setLayout(new BorderLayout());
 
-        // Main panel
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBackground(new Color(240, 248, 255)); // Light blue background
+        mainPanel.setBackground(new Color(240, 248, 255));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Title
         JLabel titleLabel = new JLabel("Analyseur de Validité Syntaxique");
         titleLabel.setFont(new Font("Poppins", Font.BOLD, 24));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setForeground(new Color(72, 61, 139)); // Dark Slate Blue
+        titleLabel.setForeground(new Color(72, 61, 139));
         mainPanel.add(titleLabel);
 
-        // Subtitle
         JLabel subtitleLabel = new JLabel("Saisissez des phrases ci-dessous et séparez-les par un tiret (-).");
         subtitleLabel.setFont(new Font("Poppins", Font.PLAIN, 14));
         subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -40,7 +37,6 @@ public class TestParseur {
         subtitleLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         mainPanel.add(subtitleLabel);
 
-        // Custom rounded text area
         JTextArea textArea = new JTextArea(7, 100) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -48,11 +44,9 @@ public class TestParseur {
                     Graphics2D g2 = (Graphics2D) g;
                     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                    // Paint background
                     g2.setColor(getBackground());
                     g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30);
 
-                    // Create border
                     g2.setColor(Color.GRAY);
                     g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30);
                 }
@@ -65,7 +59,6 @@ public class TestParseur {
         textArea.setOpaque(false);
         textArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Custom rounded scroll pane
         JScrollPane scrollPane = new JScrollPane(textArea) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -81,7 +74,6 @@ public class TestParseur {
         scrollPane.setMaximumSize(new Dimension(600, 200));
         scrollPane.setPreferredSize(new Dimension(600, 50));
 
-        // Center the scroll pane
         JPanel textAreaPanel = new JPanel();
         textAreaPanel.setLayout(new BoxLayout(textAreaPanel, BoxLayout.X_AXIS));
         textAreaPanel.add(Box.createHorizontalGlue());
@@ -90,12 +82,11 @@ public class TestParseur {
         textAreaPanel.setBackground(new Color(240, 248, 255));
         mainPanel.add(textAreaPanel);
 
-        // Round Button
         JButton selectButton = new JButton("vérifier les phrases") {
             @Override
             protected void paintComponent(Graphics g) {
                 if (getModel().isArmed()) {
-                    g.setColor(new Color(123, 104, 238)); // Pressed color
+                    g.setColor(new Color(123, 104, 238));
                 } else {
                     g.setColor(getBackground());
                 }
@@ -135,7 +126,6 @@ public class TestParseur {
         selectButton.setMaximumSize(new Dimension(400, 50));
         selectButton.setMinimumSize(new Dimension(300, 50));
 
-        // Button hover effect
         selectButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -153,7 +143,6 @@ public class TestParseur {
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         mainPanel.add(selectButton);
 
-        // Result label
         JLabel resultLabel = new JLabel();
         resultLabel.setFont(new Font("Poppins", Font.PLAIN, 18));
         resultLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -164,9 +153,7 @@ public class TestParseur {
         selectButton.addActionListener(e -> {
             String input = textArea.getText();
             if (input.isEmpty()) {
-                // resultLabel.setText("Please enter some choices!");
 
-                // Create custom JOptionPane with styled components
                 JLabel messageLabel = new JLabel("s'il vous plaît entrer des phrases!");
                 messageLabel.setFont(new Font("Poppins", Font.PLAIN, 14));
                 messageLabel.setForeground(new Color(72, 61, 139));
@@ -189,31 +176,26 @@ public class TestParseur {
                         valide.add(test);
                     } catch (RuntimeException ex) {
                         System.out.println("Entrée : \"" + test + "\" => invalide (" + ex.getMessage() + ")");
-                        noValide.add(test+" : "+ex.getMessage());
+                        noValide.add(test + " : " + ex.getMessage());
                     }
                 }
 
-                // Create styled content for the dialog///
                 JPanel dialogPanel = new JPanel(new BorderLayout(10, 10));
                 dialogPanel.setBackground(new Color(240, 248, 255));
                 dialogPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-                // Styled header
                 JLabel labelCenter = new JLabel("Resultat des phrases", SwingConstants.CENTER);
                 labelCenter.setFont(new Font("Poppins", Font.BOLD, 20));
                 labelCenter.setForeground(new Color(72, 61, 139));
                 labelCenter.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
                 dialogPanel.add(labelCenter, BorderLayout.NORTH);
 
-                // Create container for text areas
                 JPanel textAreasPanel = new JPanel(new GridLayout(1, 2, 15, 0));
                 textAreasPanel.setBackground(new Color(240, 248, 255));
 
-                // Style for both text areas
                 Font textFont = new Font("Poppins", Font.PLAIN, 14);
                 Dimension textAreaSize = new Dimension(250, 200);
 
-                // Left panel (Valid phrases)
                 JPanel leftPanel = createStyledTextPanel(
                         "Phrases valides",
                         valide,
@@ -222,7 +204,6 @@ public class TestParseur {
                         new Color(240, 248, 255),
                         new Color(72, 61, 139));
 
-                // Right panel (Invalid phrases)
                 JPanel rightPanel = createStyledTextPanel(
                         "Phrases invalides",
                         noValide,
@@ -235,7 +216,6 @@ public class TestParseur {
                 textAreasPanel.add(rightPanel);
                 dialogPanel.add(textAreasPanel, BorderLayout.CENTER);
 
-                // Create and show the custom dialog
                 JDialog dialog = new JDialog(frame, "Parseur", true);
                 dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 dialog.setContentPane(dialogPanel);
@@ -269,14 +249,12 @@ public class TestParseur {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
         panel.setBackground(backgroundColor);
 
-        // Create title label
         JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Poppins", Font.BOLD, 16));
         titleLabel.setForeground(foregroundColor);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         panel.add(titleLabel, BorderLayout.NORTH);
 
-        // Create and style text area
         StringBuilder textBuilder = new StringBuilder();
         for (String item : items) {
             textBuilder.append(item.trim())
@@ -305,7 +283,6 @@ public class TestParseur {
         textArea.setBackground(new Color(255, 255, 255));
         textArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Create scroll pane with styled border
         JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setPreferredSize(size);
         scrollPane.setBorder(BorderFactory.createCompoundBorder(

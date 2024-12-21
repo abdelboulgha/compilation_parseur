@@ -5,19 +5,19 @@ import java.util.List;
 public class Parseur {
     private String tokenCourant;
     private TokenManager tm;
-    private boolean estPluriel; // Indique si le sujet est au pluriel
+    private boolean estPluriel;
 
     public Parseur(TokenManager tm) {
         this.tm = tm;
         avancer();
     }
 
-    // Avance au token suivant
+    
     public void avancer() {
-        tokenCourant = tm.suivant().toLowerCase();  // Convertir en minuscules
+        tokenCourant = tm.suivant().toLowerCase(); 
     }
 
-    // Consomme le token courant s'il correspond au token attendu
+    
     public void consommer(String attendu) {
         if (tokenCourant.equals(attendu)) {
             avancer();
@@ -26,32 +26,31 @@ public class Parseur {
         }
     }
 
-    // Règle de l'axiome : S → Sujet Verbe [Complément]
+    
     public void axiome() {
         if (estAdverbeCirc(tokenCourant)) {
-            adverbeCirc();  // Gérer les adverbes circonstanciels au début
+            adverbeCirc();  
         }
         sujet();
         verbe();
-        if (!tokenCourant.isEmpty() && !estVirgule(tokenCourant)) {  // Ignorer les virgules
+        if (!tokenCourant.isEmpty() && !estVirgule(tokenCourant)) {  
             complement();
         }
     }
 
-    // Règle : Sujet → Article Nom [Adjectif] | Pronom | Complément circonstanciel
     public void sujet() {
         if (estPronom(tokenCourant)) {
             consommer(tokenCourant);
         } else {
             if (estArticle(tokenCourant) || estDeterminant(tokenCourant) || tokenCourant.equals("l'")) {
-                // Gérer l'apostrophe pour "l'"
+                
                 article();
                 nom();
             } else if (estNom(tokenCourant)) {
                 nom();
             } else if (estAdverbeCirc(tokenCourant)) {
                 adverbeCirc();
-                nom(); // Exemple : "chaque matin le téléphone"
+                nom();
             } else {
                 throw new RuntimeException("Erreur : sujet invalide '" + tokenCourant + "'");
             }
@@ -61,7 +60,7 @@ public class Parseur {
         }
     }
 
-    // Règle : Verbe → Liste de verbes connus
+    
     public void verbe() {
         if (estVerbe(tokenCourant)) {
             consommer(tokenCourant);
@@ -70,7 +69,6 @@ public class Parseur {
         }
     }
 
-    // Règle : Complément → Article Nom [Adjectif] | Nom [Adjectif] | Complément circonstanciel | [Conjonction + Complément]
     public void complement() {
         if (estComplementCirc(tokenCourant)) {
             while (estComplementCirc(tokenCourant)) {
@@ -83,22 +81,22 @@ public class Parseur {
             } else if (estNom(tokenCourant)) {
                 nom();
             } else {
-                // Complément est optionnel après le verbe
-                return;  // Aucune erreur si le complément est manquant
+                
+                return;  
             }
             if (estAdjectif(tokenCourant)) {
                 adjectif();
             }
         }
 
-        // Gestion des conjonctions pour des compléments complexes
+        
         if (estConjonction(tokenCourant)) {
             consommer(tokenCourant);
             complement();
         }
     }
 
-    // Règle : Article → Liste d'articles connus
+
     public void article() {
         if (estArticle(tokenCourant) || estDeterminant(tokenCourant) || tokenCourant.equals("l'")) {
             estPluriel = tokenCourant.equals("les") || tokenCourant.equals("des");
@@ -108,7 +106,7 @@ public class Parseur {
         }
     }
 
-    // Règle : Nom → Liste de noms connus
+   
     public void nom() {
         if (estNom(tokenCourant)) {
             consommer(tokenCourant);
@@ -117,7 +115,7 @@ public class Parseur {
         }
     }
 
-    // Règle : Adjectif → Liste d'adjectifs connus
+    
     public void adjectif() {
         if (estAdjectif(tokenCourant)) {
             consommer(tokenCourant);
@@ -126,7 +124,7 @@ public class Parseur {
         }
     }
 
-    // Règle : Adverbe circonstanciel → Liste d'adverbes circonstanciels
+    
     public void adverbeCirc() {
         if (estAdverbeCirc(tokenCourant)) {
             consommer(tokenCourant);
@@ -135,7 +133,7 @@ public class Parseur {
         }
     }
 
-    // Méthodes utilitaires pour vérifier les catégories
+    
     private boolean estArticle(String token) {
         return List.of("le", "la", "les", "une", "un", "des").contains(token);
     }
@@ -176,7 +174,7 @@ public class Parseur {
         return token.equals(",");
     }
 
-    // Parse l'entrée
+   
     public void parse() {
         axiome();
         if (!tokenCourant.isEmpty()) {
